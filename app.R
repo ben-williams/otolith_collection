@@ -13,32 +13,7 @@ library(funcr)
 theme_set(theme_report())
 library(shiny)
 
-dat3 <- read.csv(here::here("output", "dat1.csv")) |>
-    dplyr::select(-X)
-dat4 <- read.csv(here::here("output", "dat2.csv")) |>
-    dplyr::select(-X)
-
-dat3 |>
-    left_join(dat4) |>
-    rename_all(tolower) |>
-    mutate(species = case_when(species == 303 ~ "nork",
-                               species == 330 ~ "dusk",
-                               species == 301 ~ "pop",
-                               species %in% c(307, 357) ~ "rebs")) |>
-    group_by(year, species, haul_join, haul) |>
-    tally() |>
-    group_by(year, species) |>
-    summarise(three = ifelse(n>=3, 1, 0),
-              two = ifelse(n==2, 1, 0),
-              one = ifelse(n==1, 1, 0)) |>
-    mutate(threep = sum(three) / n(),
-           twop = sum(two) / n(),
-           onep = sum(one) / n()) |>
-    group_by(species, year) |>
-    mutate(sthree = sum(three),
-           stwo = sum(two),
-           sone = sum(one),
-           n = n()) -> ddat
+ddat <- read.csv("ddat.csv")
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
